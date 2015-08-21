@@ -3,6 +3,9 @@
 # The end goal of this script is to return a tidy data set summarizing the
 # accelerometer and gyroscope data.
 
+# Load required libraries
+library(dplyr)
+
 #**STEP 1: Merging the Training and Test Data
 
 # First, we need to read in all of the data sets.
@@ -41,15 +44,9 @@ nombres <- read.table(file = paste(getwd(), "/UCI HAR Dataset", "/features.txt",
                                    sep = ""),
                       colClasses = "character")
 
-# Rename the columns of the data frames created so far to make them human readable
-colnames(test_data) <- nombres[,2]
-colnames(train_data) <- nombres[,2]
-
-colnames(test_subjects) <- "Subjects"
-colnames(train_subjects) <- "Subjects"
-
-colnames(test_activities) <- "Activities"
-colnames(train_activities) <- "Activities"
+# At this point, nombres is filled with values that don't follow the
+# variable name syntax in R. So we need to clean the data using make.names
+nombres <- make.names(nombres[,2], unique = TRUE)
 
 # Add _subjects and _activities variables to the test_data and train_data frames
 test_data <- cbind(test_activities, test_data)
@@ -61,3 +58,24 @@ train_data <- cbind(train_subjects, train_data)
 # At this point, since a subject can't appear in both data sets, we can merge
 # them using rbind().
 merged_data <- rbind(test_data, train_data)
+
+# Rename the columns of the merged_data frame to enable the searching for the
+# next step.
+colnames(merged_data) <- c("Subjects", "Activities", nombres)
+
+#** Step 2: Extract the measurements of the mean and standard deviation for each
+#           measurement.
+
+# First, we have a lot of variables that we don't need any more and should clear.
+rm(test_data, test_activities, test_subjects, train_data, train_activities,
+   train_subjects, test_file, train_file, nombres)
+
+# Now, we can use dplyr's select() function to get the appopriate columns of data.
+# Note: I assumed that we needed to get any variables that have the word "mean"
+# or "std" in their name. I checked, and there are no cases where this will give
+# us trouble with the current data set.
+
+merged_data <- select(merged_data, Subjects, Activities, contains("mean"),
+                      contains("std"))
+
+#** Step 3: Never mind, I already renamed the columns.
