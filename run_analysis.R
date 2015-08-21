@@ -61,7 +61,7 @@ merged_data <- rbind(test_data, train_data)
 
 # Rename the columns of the merged_data frame to enable the searching for the
 # next step.
-colnames(merged_data) <- c("Subjects", "Activities", nombres)
+colnames(merged_data) <- c("Subject", "Activity", nombres)
 
 #** Step 2: Extract the measurements of the mean and standard deviation for each
 #           measurement.
@@ -75,7 +75,17 @@ rm(test_data, test_activities, test_subjects, train_data, train_activities,
 # or "std" in their name. I checked, and there are no cases where this will give
 # us trouble with the current data set.
 
-merged_data <- select(merged_data, Subjects, Activities, contains("mean"),
+merged_data <- select(merged_data, Subject, Activity, contains("mean"),
                       contains("std"))
 
-#** Step 3: Never mind, I already renamed the columns.
+#** Step 3: Convert the activity data from numeric factors to human readable txt.
+
+# First, we need to read the activity_labels.txt file
+labels <- read.table(file = paste(getwd(), "/UCI HAR Dataset",
+                                  "/activity_labels.txt", sep = ""),
+                     colClasses = "character")
+
+# Overwrite the numeric values in the Activity column with the appropriate label.
+merged_data <- mutate(merged_data, Activity = labels[Activity, 2])
+
+#** Step 4: 
