@@ -74,9 +74,10 @@ rm(test_data, test_activities, test_subjects, train_data, train_activities,
 # Note: I assumed that we needed to get any variables that have the word "mean"
 # or "std" in their name. I checked, and there are no cases where this will give
 # us trouble with the current data set. On the other hand, the Angle values aren't
-# actually averages over the data, so I'm going to omit those cases.
+# actually averages over the data, so I'm going to omit those cases by making
+# that function case sensitive.
 
-merged_data <- select(merged_data, Subject_ID, Activity, contains("mean()"),
+merged_data <- select(merged_data, Subject_ID, Activity, contains("mean", ignore.case = FALSE),
                       contains("std"))
 
 #** Step 3: Convert the activity data from numeric factors to human readable txt.
@@ -89,28 +90,9 @@ labels <- read.table(file = paste(getwd(), "/UCI HAR Dataset",
 # Overwrite the numeric values in the Activity column with the appropriate label.
 merged_data <- mutate(merged_data, Activity = labels[Activity, 2])
 
-#** Step 4: Clean up the variable names for the dataset.
-
-# Store the current column names in nombres
-nombres <- colnames(merged_data)
-
-# Iterate through the columns and convert based on the original researcher's
-# conventions to make the variable names easier to read.
-for(i in 3:length(nombres)){
-        # Split the column name into its constituent parts, using "." as a sep.
-        sep <- strsplit(nombres[i], split = "", fixed = TRUE)
-        
-        # Check the first character to determine which of the three data cases
-        # the column falls into
-        if(sep[[1]][1] == "t") {converted <- "Time_Domain"}
-        else if(sep[[1]][1] == "f") {converted <- "Fourier_Domain"}
-        
-        for(j in 2:length(sep[[1]])){
-                if(sep[[1]][j] == "t")
-        }
-        
-        nombres[i] <- converted
-}
+#** Step 4: I'm going to use the variable names from the features.txt file,
+#       which I already applied before, since there isn't much more clarification
+#       I can do without making the variable names exorbatantly long!
 
 #** Step 5: Create an average of the variables in a tidy data set.
 
