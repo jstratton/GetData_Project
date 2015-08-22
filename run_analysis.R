@@ -60,7 +60,7 @@ merged_data <- rbind(test_data, train_data)
 
 # Rename the columns of the merged_data frame to enable the searching for the
 # next step.
-colnames(merged_data) <- c("Subject_ID", "Activity", nombres)
+colnames(merged_data) <- c("subject_id", "activity", nombres)
 
 #** Step 2: Extract the measurements of the mean and standard deviation for each
 #           measurement.
@@ -76,7 +76,7 @@ rm(test_data, test_activities, test_subjects, train_data, train_activities,
 # actually averages over the data, so I'm going to omit those cases by making
 # that function case sensitive.
 
-merged_data <- select(merged_data, Subject_ID, Activity, contains("mean", ignore.case = FALSE),
+merged_data <- select(merged_data, subject_id, activity, contains("mean", ignore.case = FALSE),
                       contains("std"))
 
 #** Step 3: Convert the activity data from numeric factors to human readable txt.
@@ -86,16 +86,61 @@ labels <- read.table(file = paste0(getwd(), "/UCI HAR Dataset", "/activity_label
                      colClasses = "character")
 
 # Overwrite the numeric values in the Activity column with the appropriate label.
-merged_data <- mutate(merged_data, Activity = labels[Activity, 2])
+merged_data <- mutate(merged_data, activity = labels[activity, 2])
 
 #** Step 4: Cleaning up the column headings.
 
-#Remove the unnecessary periods from the variable names
-colnames(merged_data) <- gsub(".", "", colnames(merged_data), fixed = TRUE)
+# Store the column names in nombres
+nombres <- colnames(merged_data)
+
+# Remove the unnecessary periods from the variable names
+nombres <- gsub(pattern = ".", replacement = "", x = nombres, fixed = TRUE)
+
+# Make nombres lower case
+nombres <- tolower(nombres)
+
+# Replace t and f with time and frequency, respectively
+nombres <- gsub(pattern = "^t", replacement = "time_", x = nombres)
+nombres <- gsub(pattern = "^f", replacement = "frequency_", x = nombres)
+
+# acc stands for Accelerometer
+nombres <- gsub(pattern = "acc", replacement = "accelerometer_", x = nombres)
+
+# gyro stands for gyroscope
+nombres <- gsub(pattern = "gyro", replacement = "gyroscope_", x = nombres)
+
+# mag stands for magnitude
+nombres <- gsub(pattern = "mag", replacement = "magnitude_", x = nombres)
+
+# meanFreq stands for weighted mean frequency; since frequency is at the start
+# of each variable, I will rename this as the "weighted mean"
+nombres <- gsub(pattern = "meanfreq", replacement = "weighted_mean", x = nombres)
+
+# std stands for standard deviation
+nombres <- gsub(pattern = "std", replacement = "standard_deviation_", x = nombres)
+
+# Replace bodybody with body, since this apparently was a mistake
+nombres <- gsub(pattern = "bodybody", replacement = "body", x = nombres)
+
+# Add an underscore after the remaining words to improve variable legibility
+nombres <- gsub(pattern = "body", replacement = "body_", x = nombres)
+nombres <- gsub(pattern = "mean", replacement = "mean_", x = nombres)
+nombres <- gsub(pattern = "jerk", replacement = "jerk_", x = nombres)
+nombres <- gsub(pattern = "gravity", replacement = "gravity_", x = nombres)
+
+# Remove trailing underscores
+nombres <- gsub(pattern = "_$", replacement = "", x = nombres)
+
+# Change the column names in merged_data to match those in nombres
+colnames(merged_data) <- nombres
 
 #** Step 5: Create an average of the variables in a tidy data set.
 
 # Use dplyr's group_by function to group the data by Subject and Activity, and
 # then take the mean.
-tidy_data <- merged_data %>% group_by(Subject_ID, Activity) %>%
-                        summarise_each(funs(mean), -Subject_ID, -Activity)
+tidy_data <- merged_data %>% group_by(subject_id, activity) %>%
+                        summarise_each(funs(mean), -subject_id, -activity)
+
+# Write the tidy_data to a txt file
+write.table(tidy_data, file = paste0(getwd(), "/kinematics.txt"),
+            row.names = FALSE)
