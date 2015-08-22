@@ -6,7 +6,7 @@
 # Load required libraries
 library(dplyr)
 
-#**STEP 1: Merging the Training and Test Data
+#-------------STEP 1: Merging the Training and Test Data------------------------
 
 # First, we need to read in all of the data sets.
 
@@ -38,13 +38,11 @@ train_subjects <- read.table(file = paste0(train_file, "/subject_train.txt"),
 train_activities <- read.table(file = paste0(train_file, "/y_train.txt"),
                                colClasses = "numeric")
 
-# Read in the column names from features.txt; this is the same for both train and
-# test data.
+# Read in the test and train column names from features.txt
 nombres <- read.table(file = paste0(getwd(), "/UCI HAR Dataset", "/features.txt"),
                       colClasses = "character")
 
-# At this point, nombres is filled with values that don't follow the
-# variable name syntax in R. So we need to clean the data using make.names
+# At this point, we need to convert nombres into legal variable names.
 nombres <- make.names(nombres[,2], unique = TRUE)
 
 # Add _subjects and _activities variables to the test_data and train_data frames
@@ -54,16 +52,14 @@ test_data <- cbind(test_subjects, test_data)
 train_data <- cbind(train_activities, train_data)
 train_data <- cbind(train_subjects, train_data)
 
-# At this point, since a subject can't appear in both data sets, we can merge
-# them using rbind().
+# At this point we can merge them using rbind().
 merged_data <- rbind(test_data, train_data)
 
-# Rename the columns of the merged_data frame to enable the searching for the
-# next step.
+# Name the columns of the merged_data frame to expedite searching
 colnames(merged_data) <- c("subject_id", "activity", nombres)
 
-#** Step 2: Extract the measurements of the mean and standard deviation for each
-#           measurement.
+#-------------------------------------------------------------------------------
+#** Step 2: Extract the mean and standard deviation data points
 
 # First, we have a lot of variables that we don't need any more and should clear.
 rm(test_data, test_activities, test_subjects, train_data, train_activities,
@@ -79,7 +75,8 @@ rm(test_data, test_activities, test_subjects, train_data, train_activities,
 merged_data <- select(merged_data, subject_id, activity, contains("mean", ignore.case = FALSE),
                       contains("std"))
 
-#** Step 3: Convert the activity data from numeric factors to human readable txt.
+#-------------------------------------------------------------------------------
+#** Step 3: Convert the activity data from numeric factors to character labels.
 
 # First, we need to read the activity_labels.txt file
 labels <- read.table(file = paste0(getwd(), "/UCI HAR Dataset", "/activity_labels.txt"),
@@ -88,7 +85,7 @@ labels <- read.table(file = paste0(getwd(), "/UCI HAR Dataset", "/activity_label
 # Overwrite the numeric values in the Activity column with the appropriate label.
 merged_data <- mutate(merged_data, activity = labels[activity, 2])
 
-#** Step 4: Cleaning up the column headings.
+#---------------Step 4: Cleaning up the column headings.------------------------
 
 # Store the column names in nombres
 nombres <- colnames(merged_data)
@@ -99,7 +96,7 @@ nombres <- gsub(pattern = ".", replacement = "", x = nombres, fixed = TRUE)
 # Make nombres lower case
 nombres <- tolower(nombres)
 
-# Replace t and f with time and frequency, respectively
+# Replace leading t's and f's with time and frequency, respectively
 nombres <- gsub(pattern = "^t", replacement = "time_", x = nombres)
 nombres <- gsub(pattern = "^f", replacement = "frequency_", x = nombres)
 
@@ -112,8 +109,7 @@ nombres <- gsub(pattern = "gyro", replacement = "gyroscope_", x = nombres)
 # mag stands for magnitude
 nombres <- gsub(pattern = "mag", replacement = "magnitude_", x = nombres)
 
-# meanFreq stands for weighted mean frequency; since frequency is at the start
-# of each variable, I will rename this as the "weighted mean"
+# meanFreq stands for weighted mean frequency
 nombres <- gsub(pattern = "meanfreq", replacement = "weighted_mean", x = nombres)
 
 # std stands for standard deviation
@@ -134,7 +130,7 @@ nombres <- gsub(pattern = "_$", replacement = "", x = nombres)
 # Change the column names in merged_data to match those in nombres
 colnames(merged_data) <- nombres
 
-#** Step 5: Create an average of the variables in a tidy data set.
+#-------Step 5: Create an average of the variables for a tidy data set.---------
 
 # Use dplyr's group_by function to group the data by Subject and Activity, and
 # then take the mean.
