@@ -32,6 +32,7 @@
 * weighted_mean: the variable determined by taking the weighted mean of the frequency components.
 * jerk: the variable was determined as the time derivative of the acceleration data. Presumably, the time derivative was taken before applying the Fourier Transforms when getting the frequency data.
 * x, y, and z: 3-axial signals in the x, y, and z directions, respectively.
+
 ### The variables were normalized in the original data set
 * In other words, the data is unitless
 * Unless otherwise stated, the data ranges from -1 to +1, inclusive
