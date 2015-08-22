@@ -14,9 +14,9 @@ library(dplyr)
 test_file <- paste(getwd(), "/UCI HAR Dataset/test", sep = "")
 train_file <- paste(getwd(), "/UCI HAR Dataset/train", sep = "")
         
-# Read in the data from X_test.txt for the Test group as a character data frame.
+# Read in the data from X_test.txt for the Test group as a numeric data frame.
 test_data <- read.table(file = paste(test_file, "/X_test.txt", sep = ""),
-                         colClasses = "character")
+                         colClasses = "numeric")
 
 # Read in the subject indentifiers stored in subject_test.txt
 test_subjects <- read.table(file = paste(test_file, "/subject_test.txt", sep = ""),
@@ -26,9 +26,9 @@ test_subjects <- read.table(file = paste(test_file, "/subject_test.txt", sep = "
 test_activities <- read.table(file = paste(test_file, "/y_test.txt", sep = ""),
                               colClasses = "numeric")
 
-# Read in the data from X_train.txt for the Test group as a character data frame.
+# Read in the data from X_train.txt for the Test group as a numeric data frame.
 train_data <- read.table(file = paste(train_file, "/X_train.txt", sep = ""),
-                          colClasses = "character")
+                          colClasses = "numeric")
 
 # Read in the subject indentifiers stored in subject_train.txt
 train_subjects <- read.table(file = paste(train_file, "/subject_train.txt", sep = ""),
@@ -61,7 +61,7 @@ merged_data <- rbind(test_data, train_data)
 
 # Rename the columns of the merged_data frame to enable the searching for the
 # next step.
-colnames(merged_data) <- c("Subject", "Activity", nombres)
+colnames(merged_data) <- c("Subject_ID", "Activity", nombres)
 
 #** Step 2: Extract the measurements of the mean and standard deviation for each
 #           measurement.
@@ -75,7 +75,7 @@ rm(test_data, test_activities, test_subjects, train_data, train_activities,
 # or "std" in their name. I checked, and there are no cases where this will give
 # us trouble with the current data set.
 
-merged_data <- select(merged_data, Subject, Activity, contains("mean"),
+merged_data <- select(merged_data, Subject_ID, Activity, contains("mean"),
                       contains("std"))
 
 #** Step 3: Convert the activity data from numeric factors to human readable txt.
@@ -88,4 +88,11 @@ labels <- read.table(file = paste(getwd(), "/UCI HAR Dataset",
 # Overwrite the numeric values in the Activity column with the appropriate label.
 merged_data <- mutate(merged_data, Activity = labels[Activity, 2])
 
-#** Step 4: 
+#** Step 4: I definitely need to fix the clunky variable names in my data frame
+
+#** Step 5: Create an average of the variables in a tidy data set.
+
+# Use dplyr's group_by function to group the data by Subject and Activity, and
+# then take the mean.
+tidy_data <- merged_data %>% group_by(Subject_ID, Activity) %>%
+                        summarise_each(funs(mean), -Subject_ID, -Activity)
