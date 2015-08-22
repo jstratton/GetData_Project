@@ -32,8 +32,8 @@
 ## Step 4: Clean up the Column Headings
 
 ### The column headings are a mess at this point:
-*Prior reformatting of the variable names added a lot of ugly periods.
-*All of the variable names are abbreviated and hard to interpret.
+* Prior reformatting of the variable names added a lot of ugly periods.
+* All of the variable names are abbreviated and hard to interpret.
 
 ### To fix this, I carried out the following operations
 
@@ -51,6 +51,6 @@
 1. Each variable forms a column, and multiple variables aren't stored in a single column.
 2. Each distinct observation forms a row, and is identified by a unique combination of subject_id and activity.
 3. Each type of observational unit forms a table. I would classify the tabulated observations as a single type on the grounds that:
-	a. All of the data shares a common experimental history
-	b. Each observation underwent identical manipulations
-	c. Every observation has an identical format.
+* All of the data shares a common experimental history
+* Each observation underwent identical manipulations
+* Every observation has an identical format
