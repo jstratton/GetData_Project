@@ -1,6 +1,11 @@
 # CodeBook
 
-
+## Summary of Original Research
+* All data was taken from the following Source: Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012
+* They recorded kinematic data from a group of 30 volunteers performing various activities
+* Data was taken using Accelerometers and Gyroscopes embedded in Samsung Galaxy S II smartphones.
+* The data was randomly partitioned into two datasets to train machine learning algorithms and to test them.
+* Full information regarding their research can be found at: http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
 
 ## Data Manipulation (see README.md)
 1. Added the subject and activity values as new columns of the test and train data.
@@ -16,8 +21,8 @@
 
 ## Variable Summary
 ### Variable Names were Constructed from Descriptors
-* time: the variable was originally determined using from raw time domain data.
-* frequency: the variable was originally determined using data that had undergone a Fast Fourier Transform, i.e. frequency domain data.
+* time: the variable was determined using from raw time domain data.
+* frequency: the variable was determined using data that had undergone a Fast Fourier Transform, i.e. frequency domain data.
 * body: the acceleration data for the subject's body movement was used.
 * gravity: the acceleration data for gravity was used.
 * accelerometer: source data was acquired using an accelerometer.
@@ -25,7 +30,7 @@
 * mean: this variable was determined by taking the mean of the data.
 * standard_deviation: this variable was determined by taking the standard deviation of the data.
 * weighted_mean: the variable determined by taking the weighted mean of the frequency components.
-* jerk: the variable was determined as the time derivative of the acceleration data.
+* jerk: the variable was determined as the time derivative of the acceleration data. Presumably, the time derivative was taken before applying the Fourier Transforms when getting the frequency data.
 * x, y, and z: 3-axial signals in the x, y, and z directions, respectively.
 ### The variables were normalized in the original data set
 * In other words, the data is unitless
