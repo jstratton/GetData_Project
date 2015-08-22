@@ -22,7 +22,7 @@
 
 ## Step 2: Extract the columns containing means and standard deviations from the merged data set.
 * I chose to use dplyr's select function to accomplish this.
-* Every standard deviation result ended with std(). So I could simply choose to pass contains("std") to select to get this data.
+* Every standard deviation result ended with std(). So I chose to pass contains("std") to select to get this data.
 * I decided to use a case sensitive "mean" as my selection string for the mean values. This extracts every column that is an average of some other value.
 * Note: With these select paramters, the angle data points are excluded from the data set. This is because the assignment asked us to extract only the measurements on the mean and standard deviation. Even though the angle measurements are derived from the means, they aren't strictly speaking mean values.
 
@@ -41,7 +41,7 @@
 1. Remove the periods from the column names.
 2. Make all the column names lowercase.
 3. Replaced bodybody with body, since that is apparently an error: https://class.coursera.org/getdata-031/forum/thread?thread_id=130
-4. Spelled out all of the abbreviated parameters, adding an underscore after each word to make it human readable.
+4. Spelled out all of the abbreviations in the variable names, adding an underscore after each word to make it human readable.
 
 ## Step 5: Create an average of the variables for a tidy data set
 * Group the data points by subject id and activity using dplyr's group_by() function.
