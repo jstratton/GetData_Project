@@ -58,25 +58,17 @@ merged_data <- rbind(test_data, train_data)
 # Name the columns of the merged_data frame to expedite searching
 colnames(merged_data) <- c("subject_id", "activity", nombres)
 
-#-------------------------------------------------------------------------------
-#** Step 2: Extract the mean and standard deviation data points
+#--------Step 2: Extract the mean and standard deviation data points------------
 
 # First, we have a lot of variables that we don't need any more and should clear.
 rm(test_data, test_activities, test_subjects, train_data, train_activities,
    train_subjects, test_file, train_file, nombres)
 
 # Now, we can use dplyr's select() function to get the appopriate columns of data.
-# Note: I assumed that we needed to get any variables that have the word "mean"
-# or "std" in their name. I checked, and there are no cases where this will give
-# us trouble with the current data set. On the other hand, the Angle values aren't
-# actually averages over the data, so I'm going to omit those cases by making
-# that function case sensitive.
-
 merged_data <- select(merged_data, subject_id, activity, contains("mean", ignore.case = FALSE),
                       contains("std"))
 
-#-------------------------------------------------------------------------------
-#** Step 3: Convert the activity data from numeric factors to character labels.
+#----------Step 3: Convert the Activity IDs to Character Labels-----------------
 
 # First, we need to read the activity_labels.txt file
 labels <- read.table(file = paste0(getwd(), "/UCI HAR Dataset", "/activity_labels.txt"),
@@ -85,7 +77,7 @@ labels <- read.table(file = paste0(getwd(), "/UCI HAR Dataset", "/activity_label
 # Overwrite the numeric values in the Activity column with the appropriate label.
 merged_data <- mutate(merged_data, activity = labels[activity, 2])
 
-#---------------Step 4: Cleaning up the column headings.------------------------
+#-------------------Step 4: Clean up the column headings.-----------------------
 
 # Store the column names in nombres
 nombres <- colnames(merged_data)
