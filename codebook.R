@@ -74,7 +74,7 @@ createCodeBook <- function(input){
                             explanation)
         
         # Create a text string out of the explanations
-        codebook <- paste("* ", names, "\n", explanation, "\n")
+        codebook <- paste("* ", names, " <br> ", explanation, "\n")
         
         # Save the resulting data to a md file.
         write.table(codebook, "codebook_basis.md", quote = FALSE,
