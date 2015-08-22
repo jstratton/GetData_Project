@@ -11,37 +11,36 @@ library(dplyr)
 # First, we need to read in all of the data sets.
 
 # Store the file paths for the Test and Train datasets
-test_file <- paste(getwd(), "/UCI HAR Dataset/test", sep = "")
-train_file <- paste(getwd(), "/UCI HAR Dataset/train", sep = "")
+test_file <- paste0(getwd(), "/UCI HAR Dataset/test")
+train_file <- paste0(getwd(), "/UCI HAR Dataset/train")
         
 # Read in the data from X_test.txt for the Test group as a numeric data frame.
-test_data <- read.table(file = paste(test_file, "/X_test.txt", sep = ""),
-                         colClasses = "numeric")
+test_data <- read.table(file = paste0(test_file, "/X_test.txt"),
+                        colClasses = "numeric")
 
 # Read in the subject indentifiers stored in subject_test.txt
-test_subjects <- read.table(file = paste(test_file, "/subject_test.txt", sep = ""),
+test_subjects <- read.table(file = paste0(test_file, "/subject_test.txt"),
                             colClasses = "numeric")
 
 # Read in the activity identifiers stored in y_test.txt
-test_activities <- read.table(file = paste(test_file, "/y_test.txt", sep = ""),
+test_activities <- read.table(file = paste0(test_file, "/y_test.txt"),
                               colClasses = "numeric")
 
 # Read in the data from X_train.txt for the Test group as a numeric data frame.
-train_data <- read.table(file = paste(train_file, "/X_train.txt", sep = ""),
+train_data <- read.table(file = paste0(train_file, "/X_train.txt"),
                           colClasses = "numeric")
 
 # Read in the subject indentifiers stored in subject_train.txt
-train_subjects <- read.table(file = paste(train_file, "/subject_train.txt", sep = ""),
+train_subjects <- read.table(file = paste0(train_file, "/subject_train.txt"),
                             colClasses = "numeric")
 
 # Read in the activity identifiers stored in y_train.txt
-train_activities <- read.table(file = paste(train_file, "/y_train.txt", sep = ""),
-                              colClasses = "numeric")
+train_activities <- read.table(file = paste0(train_file, "/y_train.txt"),
+                               colClasses = "numeric")
 
 # Read in the column names from features.txt; this is the same for both train and
 # test data.
-nombres <- read.table(file = paste(getwd(), "/UCI HAR Dataset", "/features.txt",
-                                   sep = ""),
+nombres <- read.table(file = paste0(getwd(), "/UCI HAR Dataset", "/features.txt"),
                       colClasses = "character")
 
 # At this point, nombres is filled with values that don't follow the
@@ -83,16 +82,16 @@ merged_data <- select(merged_data, Subject_ID, Activity, contains("mean", ignore
 #** Step 3: Convert the activity data from numeric factors to human readable txt.
 
 # First, we need to read the activity_labels.txt file
-labels <- read.table(file = paste(getwd(), "/UCI HAR Dataset",
-                                  "/activity_labels.txt", sep = ""),
+labels <- read.table(file = paste0(getwd(), "/UCI HAR Dataset", "/activity_labels.txt"),
                      colClasses = "character")
 
 # Overwrite the numeric values in the Activity column with the appropriate label.
 merged_data <- mutate(merged_data, Activity = labels[Activity, 2])
 
-#** Step 4: I'm going to use the variable names from the features.txt file,
-#       which I already applied before, since there isn't much more clarification
-#       I can do without making the variable names exorbatantly long!
+#** Step 4: Cleaning up the column headings.
+
+#Remove the unnecessary periods from the variable names
+colnames(merged_data) <- gsub(".", "", colnames(merged_data), fixed = TRUE)
 
 #** Step 5: Create an average of the variables in a tidy data set.
 
