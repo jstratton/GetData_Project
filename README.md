@@ -32,22 +32,27 @@
 ## Step 4: Clean up the Column Headings
 
 ### The column headings are a mess at this point
+
 *Prior reformatting of the variable names added a lot of ugly periods.
 *All of the variable names are abbreviated and hard to interpret.
 
 ### To fix this, I carried out the following operations
+
 1. Remove the periods from the column names.
 2. Make all the column names lowercase.
 3. Replaced bodybody with body, since that is apparently an error: https://class.coursera.org/getdata-031/forum/thread?thread_id=130
 4. Spelled out all of the abbreviated parameters, adding an underscore after each word to make it human readable.
 
 ## Step 5: Create an average of the variables for a tidy data set
+
 * Group the data points by subject id and activity using dplyr's group_by() function.
 * Use the summarise_each dplyr function to take the average with in each group.
 * The resulting data frame meets Hadley Wickham's definition of tidy data (Sec 2.3, http://vita.had.co.nz/papers/tidy-data.pdf)
+
 1. Each variable forms a column, and multiple variables aren't stored in a single column.
 2. Each distinct observation forms a row, and is identified by a unique combination of subject_id and activity.
 3. Each type of observational unit forms a table. I would classify the tabulated observations as a single type on the grounds that
+
 a. All of the data shares a common experimental history
 b. Each observation underwent identical manipulations
 c. Every observation has an identical format.
