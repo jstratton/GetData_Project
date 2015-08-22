@@ -8,7 +8,8 @@
 
 # Contents:
 * CodeBook.md contains an explanation of each of the variable names in the tidy data set.
-* run_analysis.R is an R script for reading in the data and creating a tidy data set (ommited for size)
+* run_analysis.R is an R script for reading in the data and creating a tidy data set
+* kinematics.txt is the tidy data set, containing the averages of each mean or standard deviation variable, created by run_analysis.R
 
 # run_analysis.R high level code summary
 
